@@ -13,15 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
 
-@RestController @RequestMapping("/") @RequiredArgsConstructor
+@RestController @RequestMapping("/")
 public class EsclientController {
-
+    // @RequiredArgsConstructor 어노테이션을 처음에 붙이니까 ElasticsearchOperations 주입이 안되었다.
+    // RequiredArgsConstructor 어노테이션은 초기화되지 않은 final 필드나 @Nonnull이 붙은 필드에 생성자를 생성해준다.
     private ElasticsearchOperations elasticsearchOperations;
 
     public EsclientController(ElasticsearchOperations elasticsearchOperations){
         this.elasticsearchOperations = elasticsearchOperations;
     }
 
+    // ES index에 document 저장하기
     @PostMapping("/person")
     public String save(@RequestBody Person person)
     {
@@ -35,6 +37,7 @@ public class EsclientController {
         return documentId;
     }
 
+    // id 기준으로 document 가져오기
     @GetMapping("/person/{id}")
     public Person findById(@PathVariable("id") Long id){
         Criteria criteria = new Criteria("id").is(id);
@@ -46,6 +49,8 @@ public class EsclientController {
         Person person = elasticsearchOperations.get(id.toString(),Person.class, indexCoordinates);
         return person;
     }
+
+    // firstname와 lastname으로 검색 쿼리하고 검색 결과 가져오기
     @GetMapping("/person/{firstname}/{lastname}")
     public SearchHits<Person> findByName(@PathVariable("firstname") String firstname, @PathVariable("lastname") String lastname){
         Criteria criteria = new Criteria("lastname").is(lastname)

@@ -25,11 +25,9 @@ import static org.elasticsearch.action.support.WriteRequest.RefreshPolicy.IMMEDI
 
 @Configuration
 public class RestClientConfig extends AbstractElasticsearchConfiguration {
-
-
-    public RestClientConfig() throws IOException {
-    }
-
+    // 추상클래스에서 ElasticsearchOperations Bean 주입을 시켜준다.
+    // ElasticsearchOperations 는 id 기반으로 엔티티를 저장하고 업데이트하고 가져오는 역할 및 검색 쿼리를 하고 갖고오는 역할을 수행한다.
+    // RestHighLevelClient 를 주입시켜서 이 어플리케이션이 Elasticsearch Client 역할을 하게 된다.
     @Override
     @Bean
     public RestHighLevelClient elasticsearchClient() {
@@ -40,9 +38,6 @@ public class RestClientConfig extends AbstractElasticsearchConfiguration {
         return RestClients.create(clientConfiguration).rest();
     }
 
-    public ElasticsearchOperations elasticsearchOperations() {
-        return new ElasticsearchRestTemplate(elasticsearchClient());
-    }
 
 /*
     @Autowired
