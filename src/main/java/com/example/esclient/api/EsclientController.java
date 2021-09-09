@@ -43,6 +43,7 @@ public class EsclientController {
         Criteria criteria = new Criteria("id").is(id);
         Query query = new CriteriaQuery(criteria);
 
+
         IndexCoordinates indexCoordinates = elasticsearchOperations.getIndexCoordinatesFor(Person.class);
 
 
@@ -60,5 +61,6 @@ public class EsclientController {
         SearchHits<Person> searchHits = elasticsearchOperations.search(query,Person.class);
         return searchHits;
     }
+
 
 }
